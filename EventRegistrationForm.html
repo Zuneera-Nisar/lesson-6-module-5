@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Registration Form</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #dbeafe, #ede9fe);
+            margin: 0;
+            padding: 30px 15px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px #0002;
+        }
+
+        h1 {
+            text-align: center;
+            color: #4f46e5;
+        }
+
+        .description {
+            text-align: center;
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            margin-top: 7px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            font-size: 15px;
+        }
+
+        input:focus,
+        select:focus {
+            outline: 2px solid #818cf8;
+            border-color: #4f46e5;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            margin-top: 22px;
+            border: none;
+            border-radius: 7px;
+            background: #4f46e5;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #3730a3;
+        }
+
+        #message {
+            margin-top: 18px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .success {
+            color: #15803d;
+        }
+
+        .error {
+            color: #dc2626;
+        }
+
+        #eventPass {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            border: 2px dashed #4f46e5;
+            border-radius: 10px;
+            background: #eef2ff;
+            text-align: center;
+        }
+
+        #eventPass h2 {
+            color: #3730a3;
+        }
+
+        .pass-number {
+            font-size: 22px;
+            font-weight: bold;
+            color: #4f46e5;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>🎉 Event Registration</h1>
+
+        <p class="description">
+            Register now to receive your event pass!
+        </p>
+
+        <form id="registrationForm">
+            <label for="studentName">Full Name</label>
+            <input type="text" id="studentName" placeholder="Enter your full name">
+
+            <label for="email">Email Address</label>
+            <input type="email" id="email" placeholder="Enter your email">
+
+            <label for="studentId">Student ID</label>
+            <input type="text" id="studentId" placeholder="Enter your student ID">
+
+            <label for="event">Choose an Event</label>
+            <select id="event">
+                <option value="">-- Select an event --</option>
+                <option value="Coding Workshop">Coding Workshop</option>
+                <option value="Science Exhibition">Science Exhibition</option>
+                <option value="Art Competition">Art Competition</option>
+                <option value="Sports Day">Sports Day</option>
+            </select>
+
+            <button type="submit" id="submitBtn">
+                Register Now
+            </button>
+        </form>
+
+        <p id="message" role="status" aria-live="polite"></p>
+
+        <div id="eventPass" aria-live="polite">
+            <h2>🎟️ Your Event Pass</h2>
+            <p id="passName"></p>
+            <p id="passEvent"></p>
+            <p>Pass Number:</p>
+            <p class="pass-number" id="passNumber"></p>
+            <p>Keep your pass number safe!</p>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById("registrationForm");
+        const message = document.getElementById("message");
+        const eventPass = document.getElementById("eventPass");
+        const submitBtn = document.getElementById("submitBtn");
+
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const name = document.getElementById("studentName").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const studentId = document.getElementById("studentId").value.trim();
+            const selectedEvent = document.getElementById("event").value;
+
+            message.textContent = "";
+            message.className = "";
+            eventPass.style.display = "none";
+
+            if (!name || !email || !studentId || !selectedEvent) {
+                message.textContent = "Please fill in all fields!";
+                message.className = "error";
+                return;
+            }
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!emailPattern.test(email)) {
+                message.textContent = "Please enter a valid email address.";
+                message.className = "error";
+                return;
+            }
+
+            message.textContent = "Registration successful! Generating your pass...";
+            message.className = "success";
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Please wait...";
+
+            setTimeout(function () {
+                const randomNumber = Math.floor(100000 + Math.random() * 900000);
+
+                document.getElementById("passName").textContent =
+                    "Student: " + name;
+
+                document.getElementById("passEvent").textContent =
+                    "Event: " + selectedEvent;
+
+                document.getElementById("passNumber").textContent =
+                    "EVT-" + randomNumber;
+
+                eventPass.style.display = "block";
+
+                message.textContent = "Your registration is complete!";
+                submitBtn.disabled = false;
+                submitBtn.textContent = "Register Now";
+            }, 2000);
+        });
+    </script>
+
+</body>
+
+</html>
